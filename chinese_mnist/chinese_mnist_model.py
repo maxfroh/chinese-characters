@@ -3,7 +3,7 @@ from torch import nn
 from torchvision.transforms import ToTensor, Lambda
 from torch.utils.data import random_split
 import matplotlib.pyplot as plt
-from chinese_mnist_data import ChineseMNISTDataset, ChineseMNISTNN
+from chinese_mnist.chinese_mnist_data import ChineseMNISTDataset, ChineseMNISTNN
 
 labels_map = {
         0: '零',
