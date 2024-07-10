@@ -3,7 +3,7 @@ from torch import nn
 from torchvision.transforms import ToTensor, Lambda
 from torch.utils.data import random_split
 import matplotlib.pyplot as plt
-from chinese_mnist.chinese_mnist_data import ChineseMNISTDataset, ChineseMNISTNN
+from chinese_mnist_data import ChineseMNISTDataset, ChineseMNISTNN
 
 labels_map = {
         0: '零',
@@ -51,27 +51,27 @@ def main():
         None,
         )
     
-    plot(training_data=dataset)
+    # plot(training_data=dataset)
 
     non_testing_size = int(len(dataset) * 0.8)
     testing_size = len(dataset) - non_testing_size
     training_size = non_testing_size * 0.8
-    validation_size = non_testing_size - validation_size
-    non_testing_data, testing_data = random_split(dataset, [non_testing_size, testing_size])
-    training_data, validation_data = random_split(non_testing_data, [training_size, validation_size])
+    validation_size = non_testing_size - training_size
+    # non_testing_data, testing_data = random_split(dataset, [non_testing_size, testing_size])
+    # training_data, validation_data = random_split(non_testing_data, [training_size, validation_size])
         
-    # device = (
-    #     "cuda"
-    #     if torch.cuda.is_available()
-    #     else "mps"
-    #     if torch.backends.mps.is_available()
-    #     else "cpu"
-    # )
+    device = (
+        "cuda"
+        if torch.cuda.is_available()
+        else "mps"
+        if torch.backends.mps.is_available()
+        else "cpu"
+    )
     
-    # model = ChineseMNISTNN().to(device)
+    model = ChineseMNISTNN().to(device)
 
-    # print(f"Using {device} device")
-    # print(model)
+    print(f"Using {device} device")
+    print(model)
     
     # X = torch.rand(1, 64, 64, device=device)
     # logits = model(X)
