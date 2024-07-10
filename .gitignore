@@ -1,3 +1,4 @@
 # i don't need all that jazz clogging up the repo
 /data
 /.venv
+/chinese_mnist/__pycache__
