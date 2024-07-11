@@ -1,6 +1,10 @@
 from tkinter import *
 import threading
 from PIL import Image, ImageDraw
+from chinese_mnist import BASE_DIM
+
+LINE_WIDTH = 4
+DIM = BASE_DIM * 4
 
 class GUI(threading.Thread):
     def __init__(self):
@@ -14,26 +18,23 @@ class GUI(threading.Thread):
         
     def run(self):
         self.root = Tk()
-        self.root.geometry(f"{CMNISTCanvas.DIM+40}x{CMNISTCanvas.DIM+40}")
+        self.root.geometry(f"{DIM+40}x{DIM+40}")
         label = Label(text="Draw a Chinese number | 回中文数字")
         label.pack()
         
-        self.canvas = CMNISTCanvas(self.root, bd=4, bg="white", width=CMNISTCanvas.DIM, height=CMNISTCanvas.DIM)
+        self.canvas = CMNISTCanvas(self.root, bd=4, bg="white", width=DIM, height=DIM)
         self.canvas.pack()
         
         self.canvas.bind('<ButtonPress-1>', self.canvas._start_drawing)
         self.canvas.bind('<B1-Motion>', self.canvas._draw)
         self.canvas.bind('<ButtonRelease-1>', self.canvas._finish_drawing)
         self.root.bind('<Control-z>', self.canvas._undo)
-        self.root.bind('<Control-d>', self.canvas._save)
+        # self.root.bind('<Control-d>', self.canvas._save)
         
         self.root.mainloop()
         del self.root
 
-class CMNISTCanvas(Canvas):
-    LINE_WIDTH = 4
-    DIM = 64 * 4
-    
+class CMNISTCanvas(Canvas):    
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
         self.points:list[tuple[int, int]] = []
@@ -47,13 +48,13 @@ class CMNISTCanvas(Canvas):
         return (point[0] - 1, point[1]) if point[0] - 1 >= 0 else point
 
     def _right(self, point: tuple[int,int]) -> tuple[int,int]:
-        return (point[0] + 1, point[1]) if point[0] + 1 < CMNISTCanvas.DIM else point
+        return (point[0] + 1, point[1]) if point[0] + 1 < DIM else point
 
     def _up(self, point: tuple[int,int]) -> tuple[int,int]:
         return (point[0], point[1] - 1) if point[1] - 1 >= 0 else point
 
     def _down(self, point: tuple[int,int]) -> tuple[int,int]:
-        return (point[0], point[1] + 1) if point[1] + 1 < CMNISTCanvas.DIM else point
+        return (point[0], point[1] + 1) if point[1] + 1 < DIM else point
     
     # from https://stackoverflow.com/a/29402598 (Luke Taylor on Stack Overflow)
     def _calculate_line_points(self, x0, y0, x1, y1):
@@ -92,7 +93,7 @@ class CMNISTCanvas(Canvas):
         old_x, old_y = self.points[-1]
         self.points.extend(self._calculate_line_points(old_x, old_y, event.x, event.y))
         self.points.append((event.x, event.y))
-        super().create_line(self.points, width=CMNISTCanvas.LINE_WIDTH)
+        super().create_line(self.points, width=LINE_WIDTH)
         
     def _finish_drawing(self, event):
         self.line_stack.append(self.points)
@@ -101,10 +102,20 @@ class CMNISTCanvas(Canvas):
         
     def _undo(self, event):
         if(len(self.line_stack) > 0):
-            self.line_stack.pop()
+            removed_points = self.line_stack.pop()
+            for point in removed_points:
+                self.image_points = self.image_points.difference(
+                    {
+                        point, 
+                        self._left(point), 
+                        self._right(point), 
+                        self._up(point), 
+                        self._down(point)
+                    }
+                )
             super().delete("all")
             for points in self.line_stack:
-                super().create_line(points, width=CMNISTCanvas.LINE_WIDTH)
+                super().create_line(points, width=LINE_WIDTH)
         self.points = []
         
     def _save(self, event):
