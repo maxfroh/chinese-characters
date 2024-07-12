@@ -17,23 +17,22 @@ def points_to_tensor(points:set[tuple[int,int]]) -> Tensor:
         if(0 <= point[0] < BASE_DIM * 4 and 0 <= point[1] < BASE_DIM * 4):
             large_array[point[1]][point[0]] = 1
     resized_array = cv2.resize(large_array, dsize=(BASE_DIM, BASE_DIM), interpolation=cv2.INTER_AREA)
-    tensor = torch.from_numpy(resized_array)
-    cv2.namedWindow('img', cv2.WINDOW_AUTOSIZE)
-    cv2.imshow('img', resized_array)
-    cv2.waitKey(60000)
-    cv2.destroyAllWindows()
-    return tensor
-    
+    tensor = torch.from_numpy(resized_array).float()
+    return tensor  
 
 def run_model(model, points):
     drawing_tensor = points_to_tensor(points)
-    pred = model(drawing_tensor)
-    print(pred)
+    logits = model(drawing_tensor)
+    pred_probabilities = nn.Softmax(dim=0)(logits)
+    pred = pred_probabilities.argmax().item()
+    pred = ChineseMNISTDataset.map[pred]
+    return pred
 
 def main():
     model = ChineseMNISTNN()
-    model.load_state_dict(torch.load('chinese_mnist_model_0.001.pth'))
+    model.load_state_dict(torch.load('chinese_mnist_model_0.001_v1.pth'))
     model.eval()
+    print(model)
     points = set()
     app = GUI()
     
@@ -46,8 +45,8 @@ def main():
             if(curr_points != None and curr_points != points):
                 points = curr_points
                 result = run_model(model, points)
-                
-        
+                print(f"Guess: {result}")
+                app.set_guess(result)
 
 if __name__ == '__main__':
     main()

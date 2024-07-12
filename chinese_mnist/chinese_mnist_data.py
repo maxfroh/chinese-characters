@@ -12,8 +12,8 @@ class ChineseMNISTDataset(Dataset):
     map = {
         '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, 
         '八': 8, '九': 9, '十': 10, '百': 11, '千': 12, '万': 13, '亿': 14,
-        '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7,
-        '八': 8, '九': 9, '十': 10, '百': 11, '千': 12, '万': 13, '亿': 14
+        0: '零', 1: '一', 2: '二', 3: '三', 4: '四', 5: '五', 6: '六', 7: '七',
+        8: '八', 9: '九', 10: '十', 11: '百', 12: '千', 13: '万', 14: '亿'
     }
     
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
@@ -47,7 +47,7 @@ class ChineseMNISTDataset(Dataset):
 class ChineseMNISTNN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.flatten = nn.Flatten()
+        self.flatten = nn.Flatten(start_dim=0)
         self.linear_relu_stack = nn.Sequential(
             nn.Linear(64*64, 512),
             nn.ReLU(),
@@ -56,7 +56,7 @@ class ChineseMNISTNN(nn.Module):
             nn.Linear(512, 15),
         )
         
-    def forward(self, x):
+    def forward(self, x:Tensor):
         x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits

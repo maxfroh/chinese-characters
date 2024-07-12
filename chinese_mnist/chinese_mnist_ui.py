@@ -11,16 +11,24 @@ class GUI(threading.Thread):
         threading.Thread.__init__(self)
         self.root = None
         self.canvas = None
+        self.guess = None
         self.start()
     
     def callback(self):
         self.root.quit()
+        
+    def set_guess(self, guess):
+        self.guess = guess
+        self.guess_label.config(text=f'I predict you have written: {'?' if self.guess==None else self.guess}')
         
     def run(self):
         self.root = Tk()
         self.root.geometry(f"{DIM+40}x{DIM+40}")
         label = Label(text="Draw a Chinese number | 回中文数字")
         label.pack()
+        self.guess_label = Label()
+        self.set_guess(self.guess)
+        self.guess_label.pack()
         
         self.canvas = CMNISTCanvas(self.root, bd=4, bg="white", width=DIM, height=DIM)
         self.canvas.pack()
