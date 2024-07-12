@@ -2,6 +2,7 @@ import torch, cv2
 import numpy as np
 from torch import Tensor
 from chinese_mnist_ui import *
+from chinese_mnist_data import *
 import keyboard
 
 BASE_DIM = 64
@@ -23,12 +24,16 @@ def points_to_tensor(points:set[tuple[int,int]]) -> Tensor:
     cv2.destroyAllWindows()
     return tensor
     
-    
 
-def run_model(points):
+def run_model(model, points):
     drawing_tensor = points_to_tensor(points)
+    pred = model(drawing_tensor)
+    print(pred)
 
 def main():
+    model = ChineseMNISTNN()
+    model.load_state_dict(torch.load('chinese_mnist_model_0.001.pth'))
+    model.eval()
     points = set()
     app = GUI()
     
@@ -40,6 +45,7 @@ def main():
             curr_points = app.canvas.get_points()
             if(curr_points != None and curr_points != points):
                 points = curr_points
+                result = run_model(model, points)
                 
         
 

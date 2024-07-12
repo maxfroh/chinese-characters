@@ -2,3 +2,4 @@
 /data
 /.venv
 /chinese_mnist/__pycache__
+/chinese_mnist/previously trained models

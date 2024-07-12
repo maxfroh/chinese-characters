@@ -8,25 +8,14 @@ from torchvision.transforms import ToTensor
 from torch import nn, Tensor
 from torch.utils.data import Dataset
 
-idx_labels_map = {
-    '零': 0,
-    '一': 1,
-    '二': 2,
-    '三': 3,
-    '四': 4,
-    '五': 5,
-    '六': 6,
-    '七': 7,
-    '八': 8,
-    '九': 9,
-    '十': 10,
-    '百': 11,
-    '千': 12,
-    '万': 13,
-    '亿': 14
-}
-
 class ChineseMNISTDataset(Dataset):
+    map = {
+        '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7, 
+        '八': 8, '九': 9, '十': 10, '百': 11, '千': 12, '万': 13, '亿': 14,
+        '零': 0, '一': 1, '二': 2, '三': 3, '四': 4, '五': 5, '六': 6, '七': 7,
+        '八': 8, '九': 9, '十': 10, '百': 11, '千': 12, '万': 13, '亿': 14
+    }
+    
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
         self.img_labels = pd.read_csv(annotations_file)
         self.img_dir = img_dir
