@@ -1,8 +1,30 @@
 import os
 import pandas as pd
+import numpy as np
+import torch
+import torch.utils
 from torchvision.io import read_image
-from torch import nn
+from torchvision.transforms import ToTensor
+from torch import nn, Tensor
 from torch.utils.data import Dataset
+
+idx_labels_map = {
+    '零': 0,
+    '一': 1,
+    '二': 2,
+    '三': 3,
+    '四': 4,
+    '五': 5,
+    '六': 6,
+    '七': 7,
+    '八': 8,
+    '九': 9,
+    '十': 10,
+    '百': 11,
+    '千': 12,
+    '万': 13,
+    '亿': 14
+}
 
 class ChineseMNISTDataset(Dataset):
     def __init__(self, annotations_file, img_dir, transform=None, target_transform=None):
@@ -16,11 +38,14 @@ class ChineseMNISTDataset(Dataset):
     
     def __getitem__(self, idx):
         img_path = self._get_path(idx) 
-        image = read_image(img_path)
+        image:Tensor = read_image(img_path)
+        image = image.type(torch.float32)
         # label is chinese character
         label = self.img_labels.iloc[idx, 4]
+        label = idx_labels_map[label]
+        label = torch.from_numpy(np.asarray(label)).type(torch.LongTensor)
         if self.transform:
-            image = self.transform(image)
+            image = self.transform
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
