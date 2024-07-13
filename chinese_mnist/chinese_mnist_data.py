@@ -31,7 +31,7 @@ class ChineseMNISTDataset(Dataset):
         image = image.type(torch.float32)
         # label is chinese character
         label = self.img_labels.iloc[idx, 4]
-        label = idx_labels_map[label]
+        label = self.map[label]
         label = torch.from_numpy(np.asarray(label)).type(torch.LongTensor)
         if self.transform:
             image = self.transform
@@ -47,14 +47,24 @@ class ChineseMNISTDataset(Dataset):
 class ChineseMNISTNN(nn.Module):
     def __init__(self):
         super().__init__()
-        self.flatten = nn.Flatten(start_dim=0)
+        self.flatten = nn.Flatten()
+        # self.linear_relu_stack = nn.Sequential(
+        #     nn.Linear(64*64, 512),
+        #     nn.ReLU(),
+        #     nn.Linear(512, 512),
+        #     nn.ReLU(),
+        #     nn.Linear(512, 15),
+        # )
         self.linear_relu_stack = nn.Sequential(
-            nn.Linear(64*64, 512),
+            nn.Linear(64*64, 2048),
             nn.ReLU(),
-            nn.Linear(512, 512),
+            nn.Linear(2048, 2048),
             nn.ReLU(),
-            nn.Linear(512, 15),
+            nn.Linear(2048, 2048),
+            nn.ReLU(),
+            nn.Linear(2048,16),
         )
+        
         
     def forward(self, x:Tensor):
         x = self.flatten(x)

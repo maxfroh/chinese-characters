@@ -30,7 +30,7 @@ def run_model(model, points):
 
 def main():
     model = ChineseMNISTNN()
-    model.load_state_dict(torch.load('chinese_mnist_model_0.001_v1.pth'))
+    model.load_state_dict(torch.load('chinese_mnist_model_0.001_v2.pth'))
     model.eval()
     print(model)
     points = set()

@@ -63,8 +63,8 @@ def main():
     train_dataloader = DataLoader(training_data, batch_size=batch_size, shuffle=True)
     test_dataloader = DataLoader(testing_data, batch_size=batch_size, shuffle=True)
 
-    epochs = 80
-    learning_rates = [1e-1, 1e-2, 1e-3, 1e-4]
+    epochs = 100
+    learning_rates = [1e-2, 1e-3, 1e-4]
     test_accuracies = torch.zeros(len(learning_rates))
     test_losses = torch.zeros(len(learning_rates))
     models:list[ChineseMNISTNN] = []
@@ -87,7 +87,7 @@ def main():
         times.append(total_time)
 
     for i in range(len(learning_rates)):
-        torch.save(models[i].state_dict(), f'chinese_mnist_model_{learning_rates[i]}.pth')
+        torch.save(models[i].state_dict(), f'chinese_mnist_model_{learning_rates[i]}_v3.pth')
     print("Done!")
     print("Results:")
     for i in range(len(learning_rates)):
