@@ -3,11 +3,11 @@
 ## Datasets Used
 [Chinese MNIST Dataset](https://www.kaggle.com/datasets/gpreda/chinese-mnist)
 
+Chinese MNIST Dataset - Extended (by me) (link not yet made)
+
 
 ## Goals
 - [X] Train model on Chinese MNIST dataset
-    - [ ] Investigate if the model can be changed for performance
-    - [ ] See if the 六 diagnosis is a feature of the model
 - [X] Implement UI to draw characters
     - [X] Implement shrinking (256x256 => 64x64)
     - [ ] Convert to pygame for better performance? (branch)
@@ -17,6 +17,15 @@
 - [ ] Repeat for characters
     - [ ] New branch with new model
 
+## TODO
+- [ ] Redesign model
+    - [ ] Look at different kinds of layers/activations/optimizations for performance
+    - [ ] Check that model is being randomly initialized?
+- [ ] Retrain model on new data
+    - [ ] Implement plotting to track performance
+    - [ ] Investigate model data types
+- [ ] Confirm images are ok
+- [ ] Pygame!
 
 ## Models
 ### Chinese MNIST
@@ -24,6 +33,7 @@
 
 #### Results:
 ##### ChineseMNISTNN v1
+- Dataset: Chinese MNIST
 - Batch size: 64
 - Epochs: 80
 - `Sequential(Linear(4096->512),RELU,Linear(512->512),RELU,Linear(512->15))`
@@ -36,6 +46,7 @@
 |0.0001         | 82.69422912597656 | 1.2334425449371338 | 480.1158037185669 |
 
 ##### ChineseMNISTNN v2
+- Dataset: Chinese MNIST
 - Batch size: 64
 - Epochs: 100
 - `Sequential(Linear(4096->2048),RELU,Linear(2048->2048),RELU,Linear(2048->2048),RELU,Linear(2048->15))`
@@ -47,6 +58,16 @@
 |0.0001         | 87.16238403320312 | 1.4460784196853638 | 676.9658582210541  |
 
 \* note: the longer time for learning rate `0.01` is due to the computer closing
+
+##### ChineseMNISTNN v3
+- Dataset: Chinese MNIST Extended
+- Batch size: 64
+- Epochs: ?
+- `?`
+
+| Learning Rate | Accuracy (%)      | Loss               | Time (s)           |
+| ------------- | ----------------- | ------------------ | ------------------ |
+| ?           | ?  | ? | ? |
 
 #### Chosen model: `chinese_mnist_model_0.001.pth`
 

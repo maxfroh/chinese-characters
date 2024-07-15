@@ -15,9 +15,10 @@ def points_to_tensor(points:set[tuple[int,int]]) -> Tensor:
     large_array = np.zeros((BASE_DIM * 4, BASE_DIM * 4))
     for point in points:
         if(0 <= point[0] < BASE_DIM * 4 and 0 <= point[1] < BASE_DIM * 4):
-            large_array[point[1]][point[0]] = 1
+            large_array[point[1]][point[0]] = 255
     resized_array = cv2.resize(large_array, dsize=(BASE_DIM, BASE_DIM), interpolation=cv2.INTER_AREA)
-    tensor = torch.from_numpy(resized_array).float()
+    tensor = torch.from_numpy(resized_array)
+    tensor.type(torch.uint8)
     return tensor  
 
 def run_model(model, points):
@@ -29,15 +30,15 @@ def run_model(model, points):
     return pred
 
 def main():
-    model = ChineseMNISTNN()
-    model.load_state_dict(torch.load('chinese_mnist_model_0.001_v2.pth'))
+    version = 'v1'
+    model = ChineseMNISTNN(version=version)
+    model.load_state_dict(torch.load(f'chinese_mnist_model_0.001_{version}.pth'))
     model.eval()
-    print(model)
     points = set()
     app = GUI()
     
     # manual save
-    keyboard.add_hotkey('ctrl+d', lambda: run_model(points))
+    keyboard.add_hotkey('ctrl+d', lambda: run_model(model, points))
     
     while(app.is_alive()):
         if(app.canvas != None):

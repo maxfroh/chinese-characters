@@ -3,8 +3,8 @@ import pandas as pd
 import numpy as np
 import torch
 import torch.utils
-from torchvision.io import read_image
-from torchvision.transforms import ToTensor
+from torchvision.io import read_image, ImageReadMode
+from torchvision.transforms import ToTensor, v2
 from torch import nn, Tensor
 from torch.utils.data import Dataset
 
@@ -21,20 +21,22 @@ class ChineseMNISTDataset(Dataset):
         self.img_dir = img_dir
         self.transform = transform
         self.target_transform = target_transform
+        print(f'{transform=}')
         
     def __len__(self):
         return len(self.img_labels)
     
     def __getitem__(self, idx):
         img_path = self._get_path(idx) 
-        image:Tensor = read_image(img_path)
-        image = image.type(torch.float32)
+        image:Tensor = read_image(path=img_path, mode=ImageReadMode.GRAY)
+        print(image.shape)
+        image = image.type(torch.uint8)
         # label is chinese character
         label = self.img_labels.iloc[idx, 4]
         label = self.map[label]
-        label = torch.from_numpy(np.asarray(label)).type(torch.LongTensor)
+        label = torch.from_numpy(np.asarray(label)).type(torch.float32)
         if self.transform:
-            image = self.transform
+            image = self.transform(image)
         if self.target_transform:
             label = self.target_transform(label)
         return image, label
@@ -45,25 +47,34 @@ class ChineseMNISTDataset(Dataset):
     
     
 class ChineseMNISTNN(nn.Module):
-    def __init__(self):
+    def __init__(self, version='v1'):
         super().__init__()
-        self.flatten = nn.Flatten()
-        # self.linear_relu_stack = nn.Sequential(
-        #     nn.Linear(64*64, 512),
-        #     nn.ReLU(),
-        #     nn.Linear(512, 512),
-        #     nn.ReLU(),
-        #     nn.Linear(512, 15),
-        # )
-        self.linear_relu_stack = nn.Sequential(
-            nn.Linear(64*64, 2048),
-            nn.ReLU(),
-            nn.Linear(2048, 2048),
-            nn.ReLU(),
-            nn.Linear(2048, 2048),
-            nn.ReLU(),
-            nn.Linear(2048,16),
-        )
+        self.flatten = nn.Flatten(start_dim=0)
+        match version:
+            case 'v1':
+                self.linear_relu_stack = nn.Sequential(
+                    nn.Linear(64*64, 512),
+                    nn.ReLU(),
+                    nn.Linear(512, 512),
+                    nn.ReLU(),
+                    nn.Linear(512, 15),
+                )
+            case 'v2':
+                self.linear_relu_stack = nn.Sequential(
+                    nn.Linear(64*64, 2048),
+                    nn.ReLU(),
+                    nn.Linear(2048, 2048),
+                    nn.ReLU(),
+                    nn.Linear(2048, 2048),
+                    nn.ReLU(),
+                    nn.Linear(2048,15),
+                )
+            # case 'v3':
+            #     self.linear_relu_stack = nn.Sequential(
+            #         nn.Linear(),
+            #         nn.Relu(),
+            #         nn.Linear(,15)
+            #     )
         
         
     def forward(self, x:Tensor):

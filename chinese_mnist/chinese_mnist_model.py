@@ -1,9 +1,11 @@
 import torch, time
 from torch import nn
-from torchvision.transforms import ToTensor, Lambda
+from torchvision.transforms import ToTensor, Lambda, v2, InterpolationMode
 from torch.utils.data import random_split, DataLoader
 import matplotlib.pyplot as plt
 from chinese_mnist_data import ChineseMNISTDataset, ChineseMNISTNN
+
+BASE_DIM = 64
 
 def train(dataloader: DataLoader, model: ChineseMNISTNN, loss_func, optimizer, batch_size, device):
     size = len(dataloader.dataset)
@@ -16,7 +18,7 @@ def train(dataloader: DataLoader, model: ChineseMNISTNN, loss_func, optimizer, b
         optimizer.step()
         optimizer.zero_grad()
 
-        if batch % 18 == 0:
+        if batch % 100 == 0:
             loss, current = loss.item(), batch * batch_size + len(data)
             print(f"loss: {loss:>7f}  [{current:>5d}/{size:>5d}]")
 
@@ -56,7 +58,8 @@ def main():
         None,
     )
 
-    batch_size = 64
+    batch_sizes = [16, 32, 64, 128]
+    batch_size = batch_sizes[1]
     training_proportion = 0.8
     training_data, testing_data = random_split(dataset, [training_proportion, (1-training_proportion)])
     
@@ -64,7 +67,7 @@ def main():
     test_dataloader = DataLoader(testing_data, batch_size=batch_size, shuffle=True)
 
     epochs = 100
-    learning_rates = [1e-2, 1e-3, 1e-4]
+    learning_rates = [1e-3]
     test_accuracies = torch.zeros(len(learning_rates))
     test_losses = torch.zeros(len(learning_rates))
     models:list[ChineseMNISTNN] = []
