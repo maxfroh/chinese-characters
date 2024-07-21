@@ -17,10 +17,10 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
     - [ ] New branch with new model
 
 ## TODO
-- [ ] Redesign model
-    - [ ] Look at different kinds of layers/activations/optimizations for performance
+- [X] Redesign model
+    - [X] Look at different kinds of layers/activations/optimizations for performance
     - [ ] Check that model is being randomly initialized?
-- [ ] Retrain model on new data
+- [X] Retrain model on new data
     - [ ] Implement plotting to track performance
     - [ ] Investigate model data types
 - [ ] Confirm images are ok
@@ -35,7 +35,7 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
 - Dataset: Chinese MNIST
 - Batch size: 64
 - Epochs: 80
-- `Sequential(Linear(4096->512),RELU,Linear(512->512),RELU,Linear(512->15))`
+- ```python Linear(4096, 512) -> ReLU() -> Linear(512,512) -> ReLU() -> Linear(512,15)```
 
 | Learning Rate | Accuracy (%)      | Loss               | Time (s)          |
 | ------------- | ----------------- | ------------------ | ----------------- |
@@ -48,7 +48,11 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
 - Dataset: Chinese MNIST
 - Batch size: 64
 - Epochs: 100
-- `Sequential(Linear(4096->2048),RELU,Linear(2048->2048),RELU,Linear(2048->2048),RELU,Linear(2048->15))`
+- 
+    ```python 
+    Linear(4096,2048) -> RELU() -> Linear(2048,2048) -> RELU() -> 
+    Linear(2048,2048) -> RELU() -> Linear(2048,15) 
+    ```
 
 | Learning Rate | Accuracy (%)      | Loss               | Time (s)           |
 | ------------- | ----------------- | ------------------ | ------------------ |
@@ -65,15 +69,10 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
 - 
     ```python 
     Conv2d(1, 32, 3) -> BatchNorm2d(32) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
-
     Conv2d(32, 64, 3) -> BatchNorm2d(64) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
-
     Conv2d(64, 64, 3) -> BatchNorm2d(64) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
-
     Flatten() ->
-
-    Linear(64, 512) -> ReLU() -> Linear(512, 512) -> ReLU() -> 
-    Linear(512, 15)
+    Linear(64, 512) -> ReLU() -> Linear(512, 512) -> ReLU() -> Linear(512, 15)
     ```
 
 | Learning Rate | Accuracy (%)      | Loss               | Time (s)           |
