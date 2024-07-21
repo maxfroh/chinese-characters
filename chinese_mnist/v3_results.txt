@@ -1,0 +1,46 @@
+Results:
+        Learning rate 0.001 and Batch size 32:
+                Accuracy: 97.48967922254417
+                Loss: 0.0876893828370111
+                 Time: 7031.288910150528
+                 Average Time per Epoch: 117.1881485025088
+        Learning rate 0.001 and Batch size 64:
+                Accuracy: 97.26916074771148
+                Loss: 0.08951229747140506
+                 Time: 6399.65687084198
+                 Average Time per Epoch: 106.66094784736633
+        Learning rate 0.001 and Batch size 128:
+                Accuracy: 97.5973742916485
+                Loss: 0.08182353246041009
+                 Time: 4931.146317720413
+                 Average Time per Epoch: 82.18577196200688
+        Learning rate 0.0001 and Batch size 32:
+                Accuracy: 97.79994358829714
+                Loss: 0.0804631245949774
+                 Time: 6745.724561929703
+                 Average Time per Epoch: 112.42874269882837
+        Learning rate 0.0001 and Batch size 64:
+                Accuracy: 97.74866022205697
+                Loss: 0.07880602287983553
+                 Time: 6090.370351076126
+                 Average Time per Epoch: 101.50617251793544
+        Learning rate 0.0001 and Batch size 128:
+                Accuracy: 97.40249749993589
+                Loss: 0.09141472524306814
+                 Time: 5042.77169585228
+                 Average Time per Epoch: 84.04619493087132
+        Learning rate 1e-05 and Batch size 32:
+                Accuracy: 95.2280827713531
+                Loss: 0.1818364384027169
+                 Time: 6887.954544067383
+                 Average Time per Epoch: 114.79924240112305
+        Learning rate 1e-05 and Batch size 64:
+                Accuracy: 94.230621297982
+                Loss: 0.21581918407903342
+                 Time: 5639.066480636597
+                 Average Time per Epoch: 93.98444134394327
+        Learning rate 1e-05 and Batch size 128:
+                Accuracy: 93.45624246775557
+                Loss: 0.24957647455520318
+                 Time: 4944.013790130615
+                 Average Time per Epoch: 82.40022983551026

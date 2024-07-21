@@ -30,16 +30,15 @@ def run_model(model, points):
     return pred
 
 def main():
-    version = 'v1'
+    version = 'v3'
     model = ChineseMNISTNN(version=version)
-    model.load_state_dict(torch.load(f'chinese_mnist_model_0.001_{version}.pth'))
+    model.load_state_dict(torch.load(f'chinese_mnist_model_0.0001_32_{version}.pth'))
     model.eval()
     points = set()
     app = GUI()
     
     # manual save
     keyboard.add_hotkey('ctrl+d', lambda: run_model(model, points))
-    
     while(app.is_alive()):
         if(app.canvas != None):
             curr_points = app.canvas.get_points()

@@ -21,7 +21,6 @@ class ChineseMNISTDataset(Dataset):
         self.img_dir = img_dir
         self.transform = transform
         self.target_transform = target_transform
-        print(f'{transform=}')
         
     def __len__(self):
         return len(self.img_labels)
@@ -29,12 +28,12 @@ class ChineseMNISTDataset(Dataset):
     def __getitem__(self, idx):
         img_path = self._get_path(idx) 
         image:Tensor = read_image(path=img_path, mode=ImageReadMode.GRAY)
-        print(image.shape)
-        image = image.type(torch.uint8)
+        image = image.type(torch.float32)
         # label is chinese character
-        label = self.img_labels.iloc[idx, 4]
+        label = self.img_labels.iloc[idx, 5]
+        # label is now value
         label = self.map[label]
-        label = torch.from_numpy(np.asarray(label)).type(torch.float32)
+        label = torch.from_numpy(np.asarray(label)).type(torch.LongTensor)
         if self.transform:
             image = self.transform(image)
         if self.target_transform:
@@ -42,7 +41,7 @@ class ChineseMNISTDataset(Dataset):
         return image, label
     
     def _get_path(self, idx):
-        path = f'input_{self.img_labels.iloc[idx, 0]}_{self.img_labels.iloc[idx, 1]}_{self.img_labels.iloc[idx, 2]}.jpg'
+        path = f'input_{self.img_labels.iloc[idx, 0]}_{self.img_labels.iloc[idx, 1]}_{self.img_labels.iloc[idx, 2]}_{self.img_labels.iloc[idx, 3]}.jpeg'
         return os.path.join(self.img_dir, path)
     
     
@@ -69,15 +68,33 @@ class ChineseMNISTNN(nn.Module):
                     nn.ReLU(),
                     nn.Linear(2048,15),
                 )
-            # case 'v3':
-            #     self.linear_relu_stack = nn.Sequential(
-            #         nn.Linear(),
-            #         nn.Relu(),
-            #         nn.Linear(,15)
-            #     )
+            case 'v3':
+                self.linear_relu_stack = nn.Sequential(
+                    nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3),
+                    nn.BatchNorm2d(num_features=32),
+                    nn.ReLU(),
+                    nn.MaxPool2d(kernel_size=3),
+                    nn.Dropout(p=0.3),
+                    nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+                    nn.BatchNorm2d(num_features=64),
+                    nn.ReLU(),
+                    nn.MaxPool2d(kernel_size=3),
+                    nn.Dropout(p=0.3),
+                    nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3),
+                    nn.BatchNorm2d(num_features=64),
+                    nn.ReLU(),
+                    nn.MaxPool2d(kernel_size=3),
+                    nn.Dropout(p=0.3),
+                    nn.Flatten(start_dim=1),
+                    nn.Linear(64, 512),
+                    nn.ReLU(),
+                    nn.Linear(512, 512),
+                    nn.ReLU(),
+                    nn.Linear(512,15),
+                )
         
         
     def forward(self, x:Tensor):
-        x = self.flatten(x)
+        # x = self.flatten(x)
         logits = self.linear_relu_stack(x)
         return logits

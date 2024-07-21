@@ -11,7 +11,6 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
 - [X] Implement UI to draw characters
     - [X] Implement shrinking (256x256 => 64x64)
     - [ ] Convert to pygame for better performance? (branch)
-    - [ ] Investigate modifying drawing interface/shrinking technique for accuracy
 - [X] Create mapper between drawing and tensor
 - [X] Implement guessing app
 - [ ] Repeat for characters
@@ -61,14 +60,29 @@ Chinese MNIST Dataset - Extended (by me) (link not yet made)
 
 ##### ChineseMNISTNN v3
 - Dataset: Chinese MNIST Extended
-- Batch size: 64
-- Epochs: ?
-- `?`
+- Batch size: 32
+- Epochs: 60
+- 
+    ```python 
+    Conv2d(1, 32, 3) -> BatchNorm2d(32) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
+
+    Conv2d(32, 64, 3) -> BatchNorm2d(64) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
+
+    Conv2d(64, 64, 3) -> BatchNorm2d(64) -> ReLU() -> MaxPool2d(3) -> Dropout(0.3) ->
+
+    Flatten() ->
+
+    Linear(64, 512) -> ReLU() -> Linear(512, 512) -> ReLU() -> 
+    Linear(512, 15)
+    ```
 
 | Learning Rate | Accuracy (%)      | Loss               | Time (s)           |
 | ------------- | ----------------- | ------------------ | ------------------ |
-| ?           | ?  | ? | ? |
+| 0.0001        | 97.79994358829714 | 0.0804631245949774 | 6745.724561929703  |
 
-#### Chosen model: `chinese_mnist_model_0.001.pth`
 
-- ~85.6% acurracy
+* Takeaways: Larger batch sizes/smaller learning rates may be more effective, but would require more epochs.
+
+#### Chosen model: `chinese_mnist_model_0.0001_32_v3.pth`
+
+- ~97.8% acurracy
