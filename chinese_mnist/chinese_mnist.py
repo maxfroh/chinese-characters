@@ -17,19 +17,23 @@ def points_to_tensor(points:set[tuple[int,int]]) -> Tensor:
         if(0 <= point[0] < BASE_DIM * 4 and 0 <= point[1] < BASE_DIM * 4):
             large_array[point[1]][point[0]] = 255
     resized_array = cv2.resize(large_array, dsize=(BASE_DIM, BASE_DIM), interpolation=cv2.INTER_AREA)
-    tensor = torch.from_numpy(resized_array)
-    tensor.type(torch.uint8)
+    tensor = torch.from_numpy(resized_array).type(torch.float32)
     return tensor  
 
-def run_model(model, points):
+def run_model(model:ChineseMNISTNN, points:Tensor):
     drawing_tensor = points_to_tensor(points)
+    drawing_tensor = (drawing_tensor.unsqueeze(0)).unsqueeze(0)
     logits = model(drawing_tensor)
-    pred_probabilities = nn.Softmax(dim=0)(logits)
+    pred_probabilities = nn.Softmax(dim=1)(logits)
     pred = pred_probabilities.argmax().item()
     pred = ChineseMNISTDataset.map[pred]
+    print(f'{pred_probabilities=} {pred=}')
     return pred
 
 def main():
+    torch.set_printoptions(threshold=20000)
+    img:Tensor = read_image('..\\data\\chinese_mnist_extended\\data\\input_100_10_10_0.jpeg', ImageReadMode.GRAY)
+    img = img.type(torch.float32)
     version = 'v3'
     model = ChineseMNISTNN(version=version)
     model.load_state_dict(torch.load(f'chinese_mnist_model_0.0001_32_{version}.pth'))
