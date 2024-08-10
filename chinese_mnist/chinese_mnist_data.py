@@ -46,52 +46,32 @@ class ChineseMNISTDataset(Dataset):
     
     
 class ChineseMNISTNN(nn.Module):
-    def __init__(self, version='v1'):
+    def __init__(self):
         super().__init__()
         self.flatten = nn.Flatten(start_dim=0)
-        match version:
-            case 'v1':
-                self.linear_relu_stack = nn.Sequential(
-                    nn.Linear(64*64, 512),
-                    nn.ReLU(),
-                    nn.Linear(512, 512),
-                    nn.ReLU(),
-                    nn.Linear(512, 15),
-                )
-            case 'v2':
-                self.linear_relu_stack = nn.Sequential(
-                    nn.Linear(64*64, 2048),
-                    nn.ReLU(),
-                    nn.Linear(2048, 2048),
-                    nn.ReLU(),
-                    nn.Linear(2048, 2048),
-                    nn.ReLU(),
-                    nn.Linear(2048,15),
-                )
-            case 'v3':
-                self.linear_relu_stack = nn.Sequential(
-                    nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3),
-                    nn.BatchNorm2d(num_features=32),
-                    nn.ReLU(),
-                    nn.MaxPool2d(kernel_size=3),
-                    nn.Dropout(p=0.3),
-                    nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
-                    nn.BatchNorm2d(num_features=64),
-                    nn.ReLU(),
-                    nn.MaxPool2d(kernel_size=3),
-                    nn.Dropout(p=0.3),
-                    nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3),
-                    nn.BatchNorm2d(num_features=64),
-                    nn.ReLU(),
-                    nn.MaxPool2d(kernel_size=3),
-                    nn.Dropout(p=0.3),
-                    nn.Flatten(start_dim=1),
-                    nn.Linear(64, 512),
-                    nn.ReLU(),
-                    nn.Linear(512, 512),
-                    nn.ReLU(),
-                    nn.Linear(512,15),
-                )
+        self.linear_relu_stack = nn.Sequential(
+            nn.Conv2d(in_channels=1, out_channels=32, kernel_size=3),
+            nn.BatchNorm2d(num_features=32),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3),
+            nn.Dropout(p=0.3),
+            nn.Conv2d(in_channels=32, out_channels=64, kernel_size=3),
+            nn.BatchNorm2d(num_features=64),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3),
+            nn.Dropout(p=0.3),
+            nn.Conv2d(in_channels=64, out_channels=64, kernel_size=3),
+            nn.BatchNorm2d(num_features=64),
+            nn.ReLU(),
+            nn.MaxPool2d(kernel_size=3),
+            nn.Dropout(p=0.3),
+            nn.Flatten(start_dim=1),
+            nn.Linear(64, 512),
+            nn.ReLU(),
+            nn.Linear(512, 512),
+            nn.ReLU(),
+            nn.Linear(512,15),
+        )
         
         
     def forward(self, x:Tensor):

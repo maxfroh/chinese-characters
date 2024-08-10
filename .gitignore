@@ -3,3 +3,5 @@
 /.venv
 /chinese_mnist/__pycache__
 /chinese_mnist/previously trained models
+/chinese_characters/__pycache__
+/chinese_characters/previously trained models

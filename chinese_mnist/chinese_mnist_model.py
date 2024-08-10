@@ -68,7 +68,7 @@ def main():
         '..\\data\\chinese_mnist_extended\\data',
     )
     
-    version = 'v3'
+    version = 'v4'
 
     batch_sizes = [32, 64, 128]
     training_proportion = 0.8
@@ -88,7 +88,7 @@ def main():
             test_dataloader = DataLoader(testing_data, batch_size=batch_size, shuffle=True)
             start_time = time.time()
             print(f"\nLearning rate {learning_rate}, Batch size {batch_size}\n")
-            model = ChineseMNISTNN(version=version).to(device)
+            model = ChineseMNISTNN().to(device)
             loss_func = nn.CrossEntropyLoss()
             optimizer = torch.optim.Adam(params=model.parameters(), lr=learning_rate)
             for epoch in range(epochs):

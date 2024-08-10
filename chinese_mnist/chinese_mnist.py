@@ -34,8 +34,8 @@ def main():
     torch.set_printoptions(threshold=20000)
     img:Tensor = read_image('..\\data\\chinese_mnist_extended\\data\\input_100_10_10_0.jpeg', ImageReadMode.GRAY)
     img = img.type(torch.float32)
-    version = 'v3'
-    model = ChineseMNISTNN(version=version)
+    version = 'v4'
+    model = ChineseMNISTNN()
     model.load_state_dict(torch.load(f'chinese_mnist_model_0.0001_32_{version}.pth'))
     model.eval()
     points = set()
