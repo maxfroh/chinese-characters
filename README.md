@@ -22,7 +22,10 @@ The numeral recognizer model uses a version of the Chinese MNIST dataset to whic
 - Dataset: Chinese MNIST
 - Batch size: 64
 - Epochs: 80
-- ```python Linear(4096, 512) -> ReLU() -> Linear(512,512) -> ReLU() -> Linear(512,15)```
+-
+    ```python
+    Linear(4096, 512) -> ReLU() -> Linear(512,512) -> ReLU() -> Linear(512,15)
+    ```
 
 | Learning Rate | Accuracy (%)      | Loss               | Time (s)          |
 | ------------- | ----------------- | ------------------ | ----------------- |
