@@ -5,26 +5,13 @@
 
 Chinese MNIST Dataset - Extended (by me) (link not yet made)
 
+[CASIA Online and Offline Databases](https://nlpr.ia.ac.cn/databases/handwriting/Home.html)
 
-## Goals
-- [X] Train model on Chinese MNIST dataset
-- [X] Implement UI to draw characters
-    - [X] Implement shrinking (256x256 => 64x64)
-    - [ ] Convert to pygame for better performance? (branch)
-- [X] Create mapper between drawing and tensor
-- [X] Implement guessing app
-- [ ] Repeat for characters
-    - [ ] New branch with new model
+## About
 
-## TODO
-- [X] Redesign model
-    - [X] Look at different kinds of layers/activations/optimizations for performance
-    - [ ] Check that model is being randomly initialized?
-- [X] Retrain model on new data
-    - [ ] Implement plotting to track performance
-    - [ ] Investigate model data types
-- [ ] Confirm images are ok
-- [ ] Pygame!
+This project's goal is to learn basic CNN concepts by creating an interactive app that allows users to draw Chinese numerals (and later characters) and then tries to guess what they have drawn. Information about the models I have made is below.
+
+The numeral recognizer model uses a version of the Chinese MNIST dataset to which I have applied a variety of transformations (scaling, rotating) in order to increase sample size. I am currently working on extending the app to recognize characters using the CASIA database, both online and offline versions.
 
 ## Models
 ### Chinese MNIST
